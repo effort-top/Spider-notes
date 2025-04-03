@@ -1,0 +1,82 @@
+import requests
+
+cookies = {
+    'thw': 'cn',
+    'wk_cookie2': '1105c2ecd9b0e9e4ca21be12a465a219',
+    'cna': 'fUAqH4MttFwCAXFZ6KypdrNf',
+    'cookie2': '1c6719ad7e51b3f3badd36d4e0838940',
+    't': 'b25ea82b8177329fb22c520b958b0868',
+    '_tb_token_': '373f1bd33b8e',
+    '_samesite_flag_': 'true',
+    'xlly_s': '1',
+    '3PcFlag': '1728464558409',
+    'sgcookie': 'E1008ynALPURJvQHDX0yG2hnJTEWKi3jWhLOoKfPsujX35ypPale2QFDqrGSaDY%2B9Tuwl2sA6akVZZOFzfDGeLO0BIMmM5DuEo4gK2Vu%2FU9Y%2Btc%3D',
+    'havana_lgc2_0': 'eyJoaWQiOjM5Mzc1NDcwNDUsInNnIjoiNjIzYjFhMGM5NDViODgxM2U1ZDYyOTBmYmUxMjA2MjUiLCJzaXRlIjowLCJ0b2tlbiI6IjFIREJ3bmFmeHZlN2JrNWN0X3VZZGtnIn0',
+    '_hvn_lgc_': '0',
+    'havana_lgc_exp': '1759568562885',
+    'cookie3_bak': '1c6719ad7e51b3f3badd36d4e0838940',
+    'cookie3_bak_exp': '1728723762885',
+    'wk_unb': 'UNk0xdgpHlsUHg%3D%3D',
+    'unb': '3937547045',
+    'uc1': 'cookie14=UoYcC%2FAEKHGnxQ%3D%3D&cookie16=UtASsssmPlP%2Ff1IHDsDaPRu%2BPw%3D%3D&cookie15=UtASsssmOIJ0bQ%3D%3D&cookie21=W5iHLLyFe3xm&existShop=false&pas=0',
+    'sn': '',
+    'uc3': 'lg2=UIHiLt3xD8xYTw%3D%3D&id2=UNk0xdgpHlsUHg%3D%3D&nk2=F5RMHyzaxJWlgRo%3D&vt3=F8dD37nhNKzhuSzNur0%3D',
+    'csg': 'fd85bc17',
+    'lgc': 'tb960109922',
+    'cancelledSubSites': 'empty',
+    'env_bak': 'FM%2Bgm%2FLsLi6nqNtAEYAqe%2FpEUEqhi39RnO8jJV5kngbT',
+    'cookie17': 'UNk0xdgpHlsUHg%3D%3D',
+    'dnk': 'tb960109922',
+    'skt': '96725c33c087c75b',
+    'existShop': 'MTcyODQ2NDU2Mg%3D%3D',
+    'uc4': 'nk4=0%40FY4HWrW70KK8CBrqOWfC%2BIcJ9NLAgg%3D%3D&id4=0%40Ug4%2B5EowLZv4Hmg5m%2FNMmh0S2r47',
+    'tracknick': 'tb960109922',
+    '_cc_': 'WqG3DMC9EA%3D%3D',
+    '_l_g_': 'Ug%3D%3D',
+    'sg': '259',
+    '_nk_': 'tb960109922',
+    'cookie1': 'URovGTmnHPaxMvdiEh%2FIdyuSASJlABg98TvlP2ypD58%3D',
+    'havana_sdkSilent': '1728550964880',
+    'sdkSilent': '1728556931512',
+    'mtop_partitioned_detect': '1',
+    '_m_h5_tk': 'ede5058ec9f2a5729ee44ce04da6de4e_1728480973729',
+    '_m_h5_tk_enc': '9cdaa01a19746eb55573c4396454b714',
+    'tfstk': 'gX-nMpGvUe7Bu5z1NASIrLxumU0ORJs5RQERwgCr715_va5-RQbkwC_yvMpps_RvZTKp23Y_qK9Wvvs-dM9CVglxMmdkdps77Ik46fpZUTsrxf3T6p9CVRwTaqLwd7jDGrJPU_kGbTXuTg7F4PSN1TXzTQ5F75Wchg5yaQ7aQtBRUWrU85yN1TSPaQ5EaEqPi3-6bXOFa55fNvx1Kwf2L6JpphrRRy9Fs9Bej9vGGpz44u-GKwx8zIQfywLyhZtpE0q1vKYNbTxS3zfloU-dbHlZ0N_ybCWw9YU5IUvycM_QFuOcxQb2YN2zxG9dZGXw0YUf6hfpaHbZHobRbnQVYF3s9aIhnQ-Bt8qygdpvANtoi55WJtsNE3M4r_bP49UauqfLVOkJbza58O6GMJcfv1eRq7LqIA4jRwW1pjHiIza58O6GMADglW_FC9hA.',
+    'isg': 'BAYG5m6tnRcrrEjWcuHg-OeeV_yIZ0ohWPXXSPAv8ikE86YNWPeaMeyFyy8_20I5',
+}
+
+headers = {
+    'accept': '*/*',
+    'accept-language': 'zh-CN,zh;q=0.9',
+    # 'cookie': 'thw=cn; wk_cookie2=1105c2ecd9b0e9e4ca21be12a465a219; cna=fUAqH4MttFwCAXFZ6KypdrNf; cookie2=1c6719ad7e51b3f3badd36d4e0838940; t=b25ea82b8177329fb22c520b958b0868; _tb_token_=373f1bd33b8e; _samesite_flag_=true; xlly_s=1; 3PcFlag=1728464558409; sgcookie=E1008ynALPURJvQHDX0yG2hnJTEWKi3jWhLOoKfPsujX35ypPale2QFDqrGSaDY%2B9Tuwl2sA6akVZZOFzfDGeLO0BIMmM5DuEo4gK2Vu%2FU9Y%2Btc%3D; havana_lgc2_0=eyJoaWQiOjM5Mzc1NDcwNDUsInNnIjoiNjIzYjFhMGM5NDViODgxM2U1ZDYyOTBmYmUxMjA2MjUiLCJzaXRlIjowLCJ0b2tlbiI6IjFIREJ3bmFmeHZlN2JrNWN0X3VZZGtnIn0; _hvn_lgc_=0; havana_lgc_exp=1759568562885; cookie3_bak=1c6719ad7e51b3f3badd36d4e0838940; cookie3_bak_exp=1728723762885; wk_unb=UNk0xdgpHlsUHg%3D%3D; unb=3937547045; uc1=cookie14=UoYcC%2FAEKHGnxQ%3D%3D&cookie16=UtASsssmPlP%2Ff1IHDsDaPRu%2BPw%3D%3D&cookie15=UtASsssmOIJ0bQ%3D%3D&cookie21=W5iHLLyFe3xm&existShop=false&pas=0; sn=; uc3=lg2=UIHiLt3xD8xYTw%3D%3D&id2=UNk0xdgpHlsUHg%3D%3D&nk2=F5RMHyzaxJWlgRo%3D&vt3=F8dD37nhNKzhuSzNur0%3D; csg=fd85bc17; lgc=tb960109922; cancelledSubSites=empty; env_bak=FM%2Bgm%2FLsLi6nqNtAEYAqe%2FpEUEqhi39RnO8jJV5kngbT; cookie17=UNk0xdgpHlsUHg%3D%3D; dnk=tb960109922; skt=96725c33c087c75b; existShop=MTcyODQ2NDU2Mg%3D%3D; uc4=nk4=0%40FY4HWrW70KK8CBrqOWfC%2BIcJ9NLAgg%3D%3D&id4=0%40Ug4%2B5EowLZv4Hmg5m%2FNMmh0S2r47; tracknick=tb960109922; _cc_=WqG3DMC9EA%3D%3D; _l_g_=Ug%3D%3D; sg=259; _nk_=tb960109922; cookie1=URovGTmnHPaxMvdiEh%2FIdyuSASJlABg98TvlP2ypD58%3D; havana_sdkSilent=1728550964880; sdkSilent=1728556931512; mtop_partitioned_detect=1; _m_h5_tk=ede5058ec9f2a5729ee44ce04da6de4e_1728480973729; _m_h5_tk_enc=9cdaa01a19746eb55573c4396454b714; tfstk=gX-nMpGvUe7Bu5z1NASIrLxumU0ORJs5RQERwgCr715_va5-RQbkwC_yvMpps_RvZTKp23Y_qK9Wvvs-dM9CVglxMmdkdps77Ik46fpZUTsrxf3T6p9CVRwTaqLwd7jDGrJPU_kGbTXuTg7F4PSN1TXzTQ5F75Wchg5yaQ7aQtBRUWrU85yN1TSPaQ5EaEqPi3-6bXOFa55fNvx1Kwf2L6JpphrRRy9Fs9Bej9vGGpz44u-GKwx8zIQfywLyhZtpE0q1vKYNbTxS3zfloU-dbHlZ0N_ybCWw9YU5IUvycM_QFuOcxQb2YN2zxG9dZGXw0YUf6hfpaHbZHobRbnQVYF3s9aIhnQ-Bt8qygdpvANtoi55WJtsNE3M4r_bP49UauqfLVOkJbza58O6GMJcfv1eRq7LqIA4jRwW1pjHiIza58O6GMADglW_FC9hA.; isg=BAYG5m6tnRcrrEjWcuHg-OeeV_yIZ0ohWPXXSPAv8ikE86YNWPeaMeyFyy8_20I5',
+    'referer': 'https://s.taobao.com/search?page=1&q=%E9%9B%A8%E8%88%9E%E8%80%85',
+    'sec-ch-ua': '"Google Chrome";v="129", "Not=A?Brand";v="8", "Chromium";v="129"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
+    'sec-fetch-dest': 'script',
+    'sec-fetch-mode': 'no-cors',
+    'sec-fetch-site': 'same-site',
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
+}
+
+params = {
+    'jsv': '2.7.2',
+    'appKey': '12574478',
+    't': '1728473015859',
+    'sign': 'ffd1ac85051e97584a83a9df98d7c9b4',
+    'api': 'mtop.relationrecommend.wirelessrecommend.recommend',
+    'v': '2.0',
+    'type': 'jsonp',
+    'dataType': 'jsonp',
+    'callback': 'mtopjsonp9',
+    'data': '{"appId":"34385","params":"{\\"device\\":\\"HMA-AL00\\",\\"isBeta\\":\\"false\\",\\"grayHair\\":\\"false\\",\\"from\\":\\"nt_history\\",\\"brand\\":\\"HUAWEI\\",\\"info\\":\\"wifi\\",\\"index\\":\\"4\\",\\"rainbow\\":\\"\\",\\"schemaType\\":\\"auction\\",\\"elderHome\\":\\"false\\",\\"isEnterSrpSearch\\":\\"true\\",\\"newSearch\\":\\"false\\",\\"network\\":\\"wifi\\",\\"subtype\\":\\"\\",\\"hasPreposeFilter\\":\\"false\\",\\"prepositionVersion\\":\\"v2\\",\\"client_os\\":\\"Android\\",\\"gpsEnabled\\":\\"false\\",\\"searchDoorFrom\\":\\"srp\\",\\"debug_rerankNewOpenCard\\":\\"false\\",\\"homePageVersion\\":\\"v7\\",\\"searchElderHomeOpen\\":\\"false\\",\\"search_action\\":\\"initiative\\",\\"sugg\\":\\"_4_1\\",\\"sversion\\":\\"13.6\\",\\"style\\":\\"list\\",\\"ttid\\":\\"600000@taobao_pc_10.7.0\\",\\"needTabs\\":\\"true\\",\\"areaCode\\":\\"CN\\",\\"vm\\":\\"nw\\",\\"countryNum\\":\\"156\\",\\"m\\":\\"pc\\",\\"page\\":1,\\"n\\":48,\\"q\\":\\"%E9%9B%A8%E8%88%9E%E8%80%85\\",\\"qSource\\":\\"url\\",\\"pageSource\\":\\"\\",\\"tab\\":\\"all\\",\\"pageSize\\":48,\\"totalPage\\":100,\\"totalResults\\":4800,\\"sourceS\\":\\"0\\",\\"sort\\":\\"_coefp\\",\\"bcoffset\\":\\"\\",\\"ntoffset\\":\\"\\",\\"filterTag\\":\\"\\",\\"service\\":\\"\\",\\"prop\\":\\"\\",\\"loc\\":\\"\\",\\"start_price\\":null,\\"end_price\\":null,\\"startPrice\\":null,\\"endPrice\\":null,\\"itemIds\\":null,\\"p4pIds\\":null,\\"p4pS\\":null,\\"categoryp\\":\\"\\",\\"myCNA\\":\\"fUAqH4MttFwCAXFZ6KypdrNf\\"}"}',
+}
+
+response = requests.get(
+    'https://h5api.m.taobao.com/h5/mtop.relationrecommend.wirelessrecommend.recommend/2.0/',
+    params=params,
+    cookies=cookies,
+    headers=headers,
+)
+
+print(response.text)
