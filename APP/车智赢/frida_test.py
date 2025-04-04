@@ -15,4 +15,3 @@ def on_message(message, data):
 script.on("message", on_message)
 script.load()
 sys.stdin.read()
-
