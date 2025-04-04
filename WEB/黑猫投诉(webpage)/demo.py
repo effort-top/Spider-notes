@@ -4,10 +4,6 @@ from datetime import datetime
 import requests
 import execjs
 
-from WEB.config.logconfig import MyLogger
-
-logger = MyLogger().get_logger()
-
 headers = {
     "authority": "tousu.sina.com.cn",
     "accept": "*/*",
@@ -55,7 +51,6 @@ rs = generate_random_string()
 pageNum = "2"
 time = int(datetime.now().timestamp() * 1000)
 signature = context.call('get_signature',time, rs, pageNum)
-logger.info(signature)
 params = {
     "ts": time,
     "rs": rs,
@@ -67,5 +62,3 @@ params = {
 }
 response = requests.get(url, headers=headers, cookies=cookies, params=params)
 
-logger.info(response.json())
-logger.info(response)
