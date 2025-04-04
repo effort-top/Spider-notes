@@ -1,13 +1,11 @@
 import sys
 import frida
-from Android_app.config.logconfig import MyLogger
+from APP.config.logconfig import MyLogger
 
 logger = MyLogger().get_logger()
 
-device = frida.get_usb_device()
-pid = device.spawn(["com.che168.autotradercloud"])
-device.resume(pid)
-session = device.attach(pid)
+rdev = frida.get_remote_device()
+session = rdev.attach("车智赢+")
 with open("frida_code.js", encoding='utf-8') as f:
     script = session.create_script(f.read())
 def on_message(message, data):
