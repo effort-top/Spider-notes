@@ -23,3 +23,26 @@ cd ./data/local/tmp
 电脑端配置：    
 adb forward tcp:27042 tcp:27042     
 adb forward tcp:27043 tcp:27043  
+
+## frida检测  
+- so文件做检测
+```javascript
+Java.perform(function () {
+    // 查询到哪个so文件进行了闪退，可尝试删除
+    var android_dlopen_ext = Module.findExportByName(null, "android_dlopen_ext");
+
+    Interceptor.attach(android_dlopen_ext, {
+        onEnter: function (args) {
+            var path_ptr = args[0];
+            var path = ptr(path_ptr).readCString();
+            console.log("[dlopen_ext:]", path);
+        },
+        onLeave: function (retval) {}
+    });
+});
+```
+- ptrace占坑
+- 检测frida运行特征
+
+## 代理检测
+可以使用SocksDroid

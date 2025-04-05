@@ -1,7 +1,7 @@
 import time
 import sys
 import frida
-from Android_app.config.logconfig import MyLogger
+from APP.config.logconfig import MyLogger
 
 logger = MyLogger().get_logger()
 
