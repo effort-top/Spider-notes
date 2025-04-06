@@ -46,3 +46,24 @@ Java.perform(function () {
 
 ## 代理检测
 可以使用SocksDroid
+
+## Hook so文件
+```javascript
+Java.perform(function () {
+    //1  找到那个so文件，libJNIEncrypt.so，第二个参数是要hook的函数名--》返回值是函数的内存地址
+    var addr_func = Module.findExportByName("libJNIEncrypt.so", "AES_128_ECB_PKCS5Padding_Encrypt");
+    //2 传入要hook的函数内存地址
+    Interceptor.attach(addr_func, {
+        onEnter: function(args){
+            console.log("--------------------------执行函数--------------------------");
+            console.log("参数1-v11：", args[0].readUtf8String());
+            console.log("参数2-v8：", args[1].readUtf8String());
+        },
+        onLeave: function(retValue){
+            console.log("返回值newSign在md5之前的值:", retValue.readUtf8String());
+        }
+
+    })
+
+});
+```

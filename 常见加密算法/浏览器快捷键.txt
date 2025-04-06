@@ -1,0 +1,2 @@
+ctrl + p  跳到指定js
+ctrl + shift + f  全局搜索

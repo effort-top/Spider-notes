@@ -1,0 +1,2 @@
+ctrl + shift + \     快速回到第一行或者最后一行
+ctrl + shift + O    找到函数定义
