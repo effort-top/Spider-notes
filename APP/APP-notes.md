@@ -42,7 +42,8 @@ Java.perform(function () {
 });
 ```
 - ptrace占坑
-- 检测frida运行特征
+- 检测frida运行特征  
+使用frida增强版hluda（使用16.2.1版本最好）
 
 ## 代理检测
 可以使用SocksDroid
@@ -67,3 +68,9 @@ Java.perform(function () {
 
 });
 ```
+## 脱壳
+1. 电脑安装 pip install frida-dexdump  
+2. 执行脱壳命令
+   1. frida-dexdump -U -f 包名
+   2. frida-dexdump -U -d -f 包名   #深度脱壳
+3. 当前目录下生成一个文件夹，会有很多dex 使用jadx打开即可

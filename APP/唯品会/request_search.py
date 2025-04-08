@@ -21,7 +21,7 @@ import uuid
         edata
         skey
 3.破解edata，需要用到另外一个接口（https://vcsp-api.vip.com/token/getTokenByFP?vcspKey=4d9e524ad536c03ff203787cf0dfcd29）
-    vcspKey 以及 vcspToken
+    vcspKey 以及 请求头中的 vcspauthorization	vcspSign=xxxx
 4.注册设备（https://mp.appvipshop.com/apns/device_reg）
     skey	            6692c461c3810ab150c9a980d0c275ec(不变)
     device_token	    uuid.uuid4()
@@ -82,7 +82,22 @@ def device_reg():
 
     response = requests.get(url, headers=headers, params=params)
 
-    print(response.text)
-    print(response)
-
 device_reg()
+
+def getTokenByFP():
+    headers = {
+        "Host": "vcsp-api.vip.com",
+        "vcspauthorization": "vcspSign=05a68135d2bfd322e3a22f95bbc25a24c777f387",
+        "user-agent": "okhttp/4.9.1"
+    }
+    url = "https://vcsp-api.vip.com/token/getTokenByFP"
+    params = {
+        "vcspKey": "4d9e524ad536c03ff203787cf0dfcd29"
+    }
+    response = requests.get(url, headers=headers, params=params)
+    data_json = response.json()
+    data = data_json["data"]
+    print(data)
+    return data
+
+getTokenByFP()

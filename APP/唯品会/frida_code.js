@@ -12,11 +12,16 @@ Java.perform(function () {
     2.查找 skey
     搜索关键字 -> treeMap.put(ApiConfig.SKEY, f(context, new String[0]));  可直接Hook f(),查看返回值，发现值一直不变 6692c461c3810ab150c9a980d0c275ec
     进入f() -> KeyInfoFetcher.getInfo(context, ApiConfig.SKEY);
+        可直接Hook getInfo(),查看参数以及返回值，发现：
+            app_name : shop_android
+            vcsp_key : 4d9e524ad536c03ff203787cf0dfcd29
+            api_key  : 23e7f28019e8407b98b84cd05b5aef2c
+            skey     : 6692c461c3810ab150c9a980d0c275ec
     进入getInfo() ->
             clazz = KeyInfo.class;
             object = KeyInfo.class.newInstance();
             method = clazz.getMethod("getInfo", Context.class, String.class);
-    进入KeyInfo类查看getInfo() -> return getNavInfo(context, str); ->
+    这里是java的反射内容，可以进入KeyInfo类查看getInfo() -> return getNavInfo(context, str); ->
             private static native String getNavInfo(Context context, String str);
     没有函数体，可能需要进so文件查看。可以先Hook试一下（需要清除数据）
 
@@ -26,6 +31,14 @@ Java.perform(function () {
         console.log(`f函数参数=${context}, strArr=${strArr}`);
         let result = this["f"](context, strArr);
         console.log(`f函数返回值：${result}`);
+        return result;
+    };
+
+    let KeyInfoFetcher = Java.use("com.vip.vcsp.basesdk.base.keyinfo.KeyInfoFetcher");
+    KeyInfoFetcher["getInfo"].implementation = function (context, str) {
+        console.log(`getInfo函数参数：${context}, str=${str}`);
+        let result = this["getInfo"](context, str);
+        console.log(`getInfo函数返回值：${result}`);
         return result;
     };
     */
@@ -54,21 +67,39 @@ Java.perform(function () {
                 j_SHA1Reset(v12);
                 j_SHA1Input(v12, a3, a4);
                 if ( j_SHA1Result(v12) )  -> 因此猜测参数明文进行了SHA1加密
-         到这可以先Hook试一下 getByteHash 另外一个文件的延迟Hook
+         到这可以先Hook试一下 getByteHash 内容在另外一个文件的延迟Hook
     */
 
 
-    var addr_func = Module.findExportByName("libkeyinfo.so", "getByteHash");
-    Interceptor.attach(addr_func, {
-        onEnter: function(args){
-            this.x3 = args[3]
-        },
-        onLeave: function(retValue){
-            console.log("明文：",Memory.readCstring(this.x3))
-            console.log("返回值:", retValue.readUtf8String());
-        }
+    /*
+    4.破解 getTokenByFP接口，查找vcspKey，在第2步骤中就发现 vcsp_key : 4d9e524ad536c03ff203787cf0dfcd29 与抓包中的数据相同，是不变的
+    破解 请求头中的 vcspauthorization	vcspSign=xxxx -> 查找vcspSign ->
+    hashMap.put("VCSPAuthorization", "vcspSign=" + str); ->
+    str = VCSPSecurityBasicService.apiSignVcspToken(VCSPCommonsUtils.getUrlParams(getContext(), vCSPNetworkParam.url), VCSPCommonsConfig.getIAppInfo().getUserTokenSecret());
+    Hook apiSignVcspToken函数：
+    得到结果：
+        apiSignVcspToken函数参数：{vcspKey=4d9e524ad536c03ff203787cf0dfcd29}, str=null
+        apiSignVcspToken函数返回值：05a68135d2bfd322e3a22f95bbc25a24c777f387 -> vcspSign值不变
 
-    })
+    let VCSPSecurityBasicService = Java.use("com.vip.vcsp.security.api.VCSPSecurityBasicService");
+    VCSPSecurityBasicService["apiSignVcspToken"].implementation = function (treeMap, str) {
+        console.log(`apiSignVcspToken函数参数：${treeMap}, str=${str}`);
+        let result = this["apiSignVcspToken"](treeMap, str);
+        console.log(`apiSignVcspToken函数返回值：${result}`);
+        return result;
+    };
+    */
 
+    /*
+    5.破解 generate_token接口，查找edata ->
+    treeMap2.put(ApiConfig.EDATA, GobalConfig.encodeStr(context, sb2.toString(), null, null, 0)); -> 查看encodeStr()
+    -> return VCSPSecurityConfig.encodeStr(getApplicationContext(context), str, i10); -> 查看encodeStr()
+    -> return es(context.getApplicationContext(), str, null, null, i10); -> 查看es()
+    -> return (String) esMethod.invoke(object, context, str, str2, str3, Integer.valueOf(i10)); -> 查看invoke()
+    -> esMethod = clazz.getMethod("es", Context.class, String.class, String.class, String.class, Integer.TYPE); -> 这是反射，去对应的类中看es函数
+    -> return esNav(context, str, str2, str3, i10); -> 查看esNav()
+    -> private static native String esNav(Context context, String str, String str2, String str3, int i10);
+    需要去so文件查看内容
+    */
 
 });
