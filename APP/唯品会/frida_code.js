@@ -99,7 +99,60 @@ Java.perform(function () {
     -> esMethod = clazz.getMethod("es", Context.class, String.class, String.class, String.class, Integer.TYPE); -> 这是反射，去对应的类中看es函数
     -> return esNav(context, str, str2, str3, i10); -> 查看esNav()
     -> private static native String esNav(Context context, String str, String str2, String str3, int i10);
-    需要去so文件查看内容
+    需要去so文件查看内容:
+        查看so文件可以看到是aes的cbc加密，需要key值和iv值
+        破解key：
+            v25 = a1->functions->NewStringUTF(a1, "AES");
+            v26 = a1->functions->FindClass(a1, "javax/crypto/spec/SecretKeySpec");
+            v27 = a1->functions->GetMethodID(a1, v26, "<init>", "([BLjava/lang/String;)V");
+            v21 = a1->functions->NewObject((JNIEnv *)a1, v26, v27, v20, v25);
+            v20就是key：
+                 v20 = a1->functions->NewByteArray(a1, 16);
+                 a1->functions->SetByteArrayRegion((JNIEnv *)a1, v20, 0, 16, MD516); -> 查看MD516
+                 MD516 = (const jbyte *)j_getMD516(v60, s, v18); -> 查看j_getMD516
+                 return getMD516(a1, a2, a3); -> 可直接Hook so文件中的getMD516函数，查看返回值，多次hook值不变就可以确定key值
+                 具体内容看 hook-esNav-getMD516-SecretKeySpec.js 文件:
+                 key值：cdd17ab29b84b32552ddcfbb4abf0225
+        破解iv：
+            v34 = a1->functions->FindClass(a1, "javax/crypto/spec/IvParameterSpec");
+            v35 = a1->functions->GetMethodID(a1, v34, "<init>", "([B)V");
+            v37 = a1->functions->NewObject((JNIEnv *)a1, v36, v35, v32);
+            v32就是iv：
+                StringByteArray = j_Utils_getStringByteArray(a1, v28);
+                v32 = (struct _jobject *)StringByteArray; -> 查看v28
+                v28 = a1->functions->NewStringUTF(a1, v59); -> 查看v59
+                _QWORD v59[4];
+                memset(v59, 0, sizeof(v59));
+                j_rand16Str(); -> 查看
+                    return rand16Str(); -> Hook一下
+
+    let KeyInfo = Java.use("com.vip.vcsp.KeyInfo");
+    KeyInfo["esNav"].implementation = function (context, str, str2, str3, i10) {
+        console.log("---------------esNav函数执行-------------------")
+        console.log(`esNav函数参数: context=${context}`);
+        console.log(`esNav函数参数: str=${str}`);
+        console.log(`esNav函数参数: str2=${str2}`);
+        console.log(`esNav函数参数: str3=${str3}`);
+        console.log(`esNav函数参数: i10=${i10}`);
+        let result = this["esNav"](context, str, str2, str3, i10);
+        console.log(`esNav函数返回值：${result}`);
+        console.log("---------------esNav函数结束-------------------")
+        return result;
+    };
     */
+    let KeyInfo = Java.use("com.vip.vcsp.KeyInfo");
+    KeyInfo["esNav"].implementation = function (context, str, str2, str3, i10) {
+        console.log("---------------esNav函数执行-------------------")
+        console.log(`esNav函数参数: context=${context}`);
+        console.log(`esNav函数参数: str=${str}`);
+        console.log(`esNav函数参数: str2=${str2}`);
+        console.log(`esNav函数参数: str3=${str3}`);
+        console.log(`esNav函数参数: i10=${i10}`);
+        let result = this["esNav"](context, str, str2, str3, i10);
+        console.log(`esNav函数返回值：${result}`);
+        console.log("---------------esNav函数结束-------------------")
+        return result;
+    };
 
 });
+// frida -U -f com.achievo.vipshop -l frida_code.js

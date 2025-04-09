@@ -74,3 +74,33 @@ Java.perform(function () {
    1. frida-dexdump -U -f 包名
    2. frida-dexdump -U -d -f 包名   #深度脱壳
 3. 当前目录下生成一个文件夹，会有很多dex 使用jadx打开即可
+
+## AES加密
+可尝试直接hook aes的加密类
+```javascript
+Java.perform(function () {
+    var SecretKeySpec = Java.use("javax.crypto.spec.SecretKeySpec");
+        var ByteString = Java.use("com.android.okhttp.okio.ByteString");
+        SecretKeySpec.$init.overload('[B', 'java.lang.String').implementation = function (key, name) {
+            if (name === 'AES') {
+                console.log("-----------------SecretKeySpec-----------------");
+                //console.log("4.key bytes=", JSON.stringify(key));
+                console.log("java key hex =", ByteString.of(key).hex());
+                //console.log("4.key", ByteString.of(key).utf8());
+            }
+            var res = this.$init(key, name);
+            return res;
+        };
+    var IvParameterSpec = Java.use("javax/crypto/spec/IvParameterSpec");
+    var ByteString = Java.use("com.android.okhttp.okio.ByteString");
+    IvParameterSpec.$init.overload('[B').implementation = function (iv) {
+        console.log("-----------------IvParameterSpec-----------------");
+        //console.log("4.iv bytes=", JSON.stringify(iv));
+        console.log("java iv hex =", ByteString.of(iv).hex());
+        //console.log("4.iv", ByteString.of(iv).utf8());
+
+        var res = this.$init(iv);
+        return res;
+    };
+})
+```
