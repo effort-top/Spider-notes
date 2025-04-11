@@ -75,6 +75,45 @@ Java.perform(function () {
    2. frida-dexdump -U -d -f 包名   #深度脱壳
 3. 当前目录下生成一个文件夹，会有很多dex 使用jadx打开即可
 
+## unidbg
+方法的参数签名：
+
+| Java      | Native      | Signature             |
+|-----------|-------------|-----------------------|
+| byte      | jbyte       | B                     |
+| char      | jchar       | C                     |
+| double    | jdouble     | D                     |
+| float     | jfloat      | F                     |
+| int       | jint        | I                     |
+| short     | jshort      | S                     |
+| long      | jlong       | J                     |
+| boolean   | jboolean    | Z                     |
+| void      | void        | V                     |
+| 所有对象  | jobject     | L+classname +;        |
+| Class     | jclass      | Ljava/lang/Class;     |
+| String    | jstring     | Ljava/lang/String;    |
+| Throwable | jthrowable  | Ljava/lang/Throwable; |
+| Object[]  | jobjectArray | [L+classname +;       |
+| byte[]    | jbyteArray  | [B                    |
+| char[]    | jcharArray  | [C                    |
+| double[]  | jdoubleArray | [D                    |
+| float[]   | jfloatArray | [F                    |
+| int[]     | jintArray   | [I                    |
+| short[]   | jshortArray | [S                    |
+| long[]    | jlongArray  | [J                    |
+| boolean[] | jbooleanArray | [Z                    |
+
+调用jni中的native方法时，需要传入参数，参数不是java类型，需要是unidbg提供的类型
+
+| java类型           | 包裹                                           |
+|------------------|----------------------------------------------|
+| 字符串              | StringObject("字符串")                          |
+| 字节数组{11，12}      | ByteArray(11,12)                             |
+| 布尔：true/false    | true/false                                   |
+| 数字：19            | 19                                           |
+| 空：null           | null                                         |
+| java自定义类型 info对象 | vm.resolveClass("路径/info类名").newObject(null) |
+
 ## AES加密
 可尝试直接hook aes的加密类
 ```javascript
@@ -104,3 +143,13 @@ Java.perform(function () {
     };
 })
 ```
+
+## JNI_OnLoad
+1. 找到类 v4 = (v6[0], "com/duapp/aesjni/AESEncrypt");
+2. 对应关系 (v3, v4, off_15010, 8LL); -> off_15010 有8个对应关系
+3. 查看对应关系  
+![img_2.png](img_2.png)  
+java中的方法：encodeByte  
+根据签名：(byte[] bArr, String str)-->([BLjava/lang/String;)Ljava/lang/String;  
+对应c中的方法：encode  
+4. 双击进入encode后进行分析
