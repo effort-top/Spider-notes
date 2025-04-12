@@ -32,6 +32,11 @@ def aes_encrypt_ECB(key,data_string):
     raw = pad(data_string.encode('utf-8'), 16)
     return aes.encrypt(raw)
 
+def aes_encrypt_CBC(key, t, iv):
+    aes = AES.new(add_to_16(key), AES.MODE_CBC, add_to_16(iv))  # 初始化加密器
+    raw = pad(t.encode('utf-8'), 16)
+    return aes.encrypt(raw)
+
 
 if __name__ == '__main__':
     secret_key = '12345678'   # 密钥
