@@ -43,7 +43,7 @@
         "fd6b639dbcff0c2a1b03b389ec763c4b" aes的key
         "77b07a672d57d64c" aes的iv
         byte[] i = com.bilibili.droid.g0.a.i(secretKeySpec, ivParameterSpec, bytes3);
-
+    6. 查找明文的构建方式,需要解决 aid cid did stime
 */
 
 Java.perform(function () {
