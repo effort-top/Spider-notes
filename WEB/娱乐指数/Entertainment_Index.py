@@ -35,7 +35,7 @@ context = execjs.compile(js_code)
 
 keyword = ("蔡徐坤")
 sign = context.call('getSign', keyword)
-
+print(sign)
 params = {
     "keyWord": keyword,
     "sign": sign

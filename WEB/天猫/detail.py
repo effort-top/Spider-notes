@@ -1,6 +1,6 @@
 import json
+import re
 import time
-
 import execjs
 import requests
 
@@ -9,105 +9,186 @@ with open('解码.js', "r", encoding='utf-8') as f:
     js_tamp = f.read()
 jsDrive = execjs.compile(js_tamp)
 cookies = {
-    'thw': 'cn',
-    't': '87838c8964128beffe142ef56810de5a',
-    '_tb_token_': '3f7a5fe15788e',
-    'xlly_s': '1',
+    't': '25b98257d8c2ee74bc52cd379abca5d8',
+    'wk_cookie2': '1c9cfc34fd54d09a72cb606990a7ba68',
     '_samesite_flag_': 'true',
-    '3PcFlag': '1743419750164',
-    'cookie2': '1997b835b53fe0f4a1b671ab00e5f578',
-    'cna': 'XWdxIJ1q3EoCAcuoEQWvD49k',
-    'sgcookie': 'E100jN2vbdQl2l%2F6fYvFVz0p4ozGihollswGzmwgoBK4l6cfkFx%2B0ruxVaPoiUkTIfY0ELMFbeQEuf2VWCszMWek3oZ92F2mxBE7I8mHRRPJXas%3D',
-    'wk_cookie2': '136ef79d6239ed390df9f0111b223efd',
-    'wk_unb': 'UUpgT78V5mzPUz%2Bf0g%3D%3D',
-    'unb': '2219041487532',
-    'uc1': 'cookie15=WqG3DMC9VAQiUQ%3D%3D&existShop=false&cookie14=UoYaiG3sGIg3rg%3D%3D&pas=0&cookie16=UtASsssmPlP%2Ff1IHDsDaPRu%2BPw%3D%3D&cookie21=W5iHLLyFfoaZ',
-    'uc3': 'nk2=F5RAQ159YaaZ3inzT8c%3D&id2=UUpgT78V5mzPUz%2Bf0g%3D%3D&lg2=U%2BGCWk%2F75gdr5Q%3D%3D&vt3=F8dD2EruJRwdB4dVCqQ%3D',
-    'csg': 'b4c0ab5c',
-    'lgc': 'tb514724667609',
+    'cookie2': '10943715ee9ffea21918f15057c9ae05',
+    '_tb_token_': 'ee35714b7fb5e',
+    'mt': 'ci=0_0',
+    'wk_unb': 'UUwY%2Fjg%2BJRxTVQ%3D%3D',
+    'lgc': '%5Cu8DB3%5Cu7403%5Cu5148%5Cu751F%5Cu963F%5Cu8BFA',
     'cancelledSubSites': 'empty',
-    'cookie17': 'UUpgT78V5mzPUz%2Bf0g%3D%3D',
-    'dnk': 'tb514724667609',
-    'skt': '702c20894aeba788',
-    'existShop': 'MTc0MzQxOTc5MA%3D%3D',
-    'uc4': 'id4=0%40U2gqwAAps5hqCshulxUBHfnuO%2FcRMbbC&nk4=0%40FY4L7%2F5I4%2FHg9yfxqsHI6zliEz6ePjNjhA%3D%3D',
-    'tracknick': 'tb514724667609',
-    '_cc_': 'UtASsssmfA%3D%3D',
+    'dnk': '%5Cu8DB3%5Cu7403%5Cu5148%5Cu751F%5Cu963F%5Cu8BFA',
+    'tracknick': '%5Cu8DB3%5Cu7403%5Cu5148%5Cu751F%5Cu963F%5Cu8BFA',
+    '_cc_': 'Vq8l%2BKCLiw%3D%3D',
+    'thw': 'cn',
+    '3PcFlag': '1747200903186',
+    'sgcookie': 'E100mqCc1MAZXP6oRdSBxvz40p5fkX7iSYFsjv4Lr1KxDdKQAHPqtj%2FPd40t16Bm4sTiR4tpnEKn%2BeA9CNJ9qnbciZL6Jwodt8qPcvkqxNEmgMrKSG9NhuWe3hIOMknKTz9H%2Bj%2FEMkd3Tn5q3%2FO1h8FzNA%3D%3D',
+    'unb': '2487913053',
+    'uc1': 'cookie14=UoYajLe8UiEn%2Fg%3D%3D&cookie21=V32FPkk%2Fgi8IDE%2FSpbTf&cookie16=V32FPkk%2FxXMk5UvIbNtImtMfJQ%3D%3D&pas=0&cookie15=Vq8l%2BKCLz3%2F65A%3D%3D&existShop=true',
+    'uc3': 'vt3=F8dD2EXfIMcuP87XCOs%3D&nk2=tPyx%2BmdUJ5suFyAe&id2=UUwY%2Fjg%2BJRxTVQ%3D%3D&lg2=URm48syIIVrSKA%3D%3D',
+    'csg': 'edefe7ac',
+    'cookie17': 'UUwY%2Fjg%2BJRxTVQ%3D%3D',
+    'skt': 'ebe07036134e714b',
+    'existShop': 'MTc0NzIwMTAxMQ%3D%3D',
+    'uc4': 'nk4=0%40thpxwJf2ZW2jlM0XVjcHbKzhpehoJcA%3D&id4=0%40U27Hq%2BnL6JHzikHQQR4L751hziPX',
     '_l_g_': 'Ug%3D%3D',
-    'sg': '92b',
-    '_nk_': 'tb514724667609',
-    'cookie1': 'BYahADcvJZKIjfPEecLF1sBCJX%2FXt%2FzL%2Bn%2F%2FVlaPQQs%3D',
-    'isg': 'BIyMWYn8BzVhORNJ71m7LRQtXeq-xTBv4gwXNOZO8DbVcS97DtZv_SOJFXnJPmjH',
+    'sg': '%E8%AF%BA37',
+    '_nk_': '%5Cu8DB3%5Cu7403%5Cu5148%5Cu751F%5Cu963F%5Cu8BFA',
+    'cookie1': 'B0Txavq8coXp0Z4jBK9eRa%2FsUCTDd7nQ8%2BTSbdWH8O0%3D',
+    'xlly_s': '1',
+    'cna': 'yt2gIAaI7xgCAXjmeudsm5Mr',
     'mtop_partitioned_detect': '1',
-    '_m_h5_tk': '24f12793789fcf4f09ff765f6b0bd92e_1743434690724',
-    '_m_h5_tk_enc': 'f77243eea74435bb8926bff223dc753f',
-    'tfstk': 'gMQjIJ9htxDfnxLt1nVyN9rPyxY157zU5fOOt13q6ELY5CBFFh3amE-65TpPuK52kPOOLTtOQd5qigXF9q74mFu6oFYTLJzU8SfDSFdyM-fpn_Ck67RAUBnYJFYTL8orWn4BS9fEAI1Aw7Ow1j3OBVFW2Cp-kC3v6YFWEL3xDC3x2_dBtdHOBhCJ2C9JBFLOBUFW1LptpBGB1o9cGSpRT1nskL5vFV3OkPxXdtoZWVQkGn_OML1VgaOXcpKo-NvGkT5OuZxudvLGaM61XOqEqE1ODEdFirgWJsIP5Q7a_c9Ana1Ro3GIRFsAhGKhVymHDh9f2ZKS6VCkyiKFftwjmKIVFHAJ2faHa9JRiZI7sYCALKTvw3zLO_KO4Zxhu83XJMf2uGBgY0Yf6iL54iuedyF-f5Ui5Q9UN7iijqIVUd1RU469DQAX47NSHGxvZQ9UN7iijndkGBP7NxIG.',
+    '_m_h5_tk': '0a6374225f7f46af9519eb0544a749be_1747289054576',
+    '_m_h5_tk_enc': 'b14d6477b87ed343eb48b6722cce6099',
+    'bxuab': '0',
+    'aui': '2487913053',
+    'sca': '81fd29e0',
+    'isg': 'BCkpBfhrZX2aKlnMaV1jJ0v1ONWD9h0oIvPCVcsfk5BPkkukE0Ve-C2SVjakCrVg',
+    'tfstk': 'gKnxIIqE8QADEloYEx8lSy2eTYJk-UDqejkCj5Vc5bh-ivg0oANgXfht6S46gomtwjDIorDsjRiT000cjSA4XAG3XBAHxHqVdur6tBbF8XygfRtg1U4XHw6HHBAHx3YfFldvtfvxnXi8Q7wbCRNXeTNzIRZ_GP15PJN7flab1zt7CR5_CGN6ezwaIRZ_ffMWeRV7hlZsplXYstNOX28z2LfJ5-s1f0eYlUDbNGwr2-UYOxiAfG_4HrFCf7dXVX4uPAztbOSTGxgE_JGfGB4qC4h8HlKllkM-5XercHfYUqDSK7MdQGkbD2nLcqdPzocxVuijJOsseoF4W-UPMQFI0YiUVzxBpYirixo-IOt_EXVS3mZ9AprYcSZ8UcAPc53S5m44bsO3uAg-w-EC4ginvE0VtWeGlLpR7NPgUEwzEwyHbzIueWvlrN7ar8y8tLpR7NzbU8FHEHbN7z2P.',
 }
 
 headers = {
-    'authority': 'h5api.m.taobao.com',
     'accept': 'application/json',
     'accept-language': 'zh-CN,zh;q=0.9',
-    'bx-umidtoken': 'T2gAUr3KgUsTHrkUUEJvwu1x5Dwwdclef_ykd5pKv6ClxOpzcdxb7vwIy_B-U5qMYo8=',
+    'bx-umidtoken': 'T2gAykjZdH38MCvTdqU4Ta5JuiGzSuqEyIhs5hgEvKTPEYyrfVan1B4AgT_q1x9vf3k=',
+    'cache-control': 'no-cache',
     'content-type': 'application/x-www-form-urlencoded',
-    # 'cookie': 'thw=cn; t=87838c8964128beffe142ef56810de5a; _tb_token_=3f7a5fe15788e; xlly_s=1; _samesite_flag_=true; 3PcFlag=1743419750164; cookie2=1997b835b53fe0f4a1b671ab00e5f578; cna=XWdxIJ1q3EoCAcuoEQWvD49k; sgcookie=E100jN2vbdQl2l%2F6fYvFVz0p4ozGihollswGzmwgoBK4l6cfkFx%2B0ruxVaPoiUkTIfY0ELMFbeQEuf2VWCszMWek3oZ92F2mxBE7I8mHRRPJXas%3D; wk_cookie2=136ef79d6239ed390df9f0111b223efd; wk_unb=UUpgT78V5mzPUz%2Bf0g%3D%3D; unb=2219041487532; uc1=cookie15=WqG3DMC9VAQiUQ%3D%3D&existShop=false&cookie14=UoYaiG3sGIg3rg%3D%3D&pas=0&cookie16=UtASsssmPlP%2Ff1IHDsDaPRu%2BPw%3D%3D&cookie21=W5iHLLyFfoaZ; uc3=nk2=F5RAQ159YaaZ3inzT8c%3D&id2=UUpgT78V5mzPUz%2Bf0g%3D%3D&lg2=U%2BGCWk%2F75gdr5Q%3D%3D&vt3=F8dD2EruJRwdB4dVCqQ%3D; csg=b4c0ab5c; lgc=tb514724667609; cancelledSubSites=empty; cookie17=UUpgT78V5mzPUz%2Bf0g%3D%3D; dnk=tb514724667609; skt=702c20894aeba788; existShop=MTc0MzQxOTc5MA%3D%3D; uc4=id4=0%40U2gqwAAps5hqCshulxUBHfnuO%2FcRMbbC&nk4=0%40FY4L7%2F5I4%2FHg9yfxqsHI6zliEz6ePjNjhA%3D%3D; tracknick=tb514724667609; _cc_=UtASsssmfA%3D%3D; _l_g_=Ug%3D%3D; sg=92b; _nk_=tb514724667609; cookie1=BYahADcvJZKIjfPEecLF1sBCJX%2FXt%2FzL%2Bn%2F%2FVlaPQQs%3D; isg=BIyMWYn8BzVhORNJ71m7LRQtXeq-xTBv4gwXNOZO8DbVcS97DtZv_SOJFXnJPmjH; mtop_partitioned_detect=1; _m_h5_tk=24f12793789fcf4f09ff765f6b0bd92e_1743434690724; _m_h5_tk_enc=f77243eea74435bb8926bff223dc753f; tfstk=gMQjIJ9htxDfnxLt1nVyN9rPyxY157zU5fOOt13q6ELY5CBFFh3amE-65TpPuK52kPOOLTtOQd5qigXF9q74mFu6oFYTLJzU8SfDSFdyM-fpn_Ck67RAUBnYJFYTL8orWn4BS9fEAI1Aw7Ow1j3OBVFW2Cp-kC3v6YFWEL3xDC3x2_dBtdHOBhCJ2C9JBFLOBUFW1LptpBGB1o9cGSpRT1nskL5vFV3OkPxXdtoZWVQkGn_OML1VgaOXcpKo-NvGkT5OuZxudvLGaM61XOqEqE1ODEdFirgWJsIP5Q7a_c9Ana1Ro3GIRFsAhGKhVymHDh9f2ZKS6VCkyiKFftwjmKIVFHAJ2faHa9JRiZI7sYCALKTvw3zLO_KO4Zxhu83XJMf2uGBgY0Yf6iL54iuedyF-f5Ui5Q9UN7iijqIVUd1RU469DQAX47NSHGxvZQ9UN7iijndkGBP7NxIG.',
     'origin': 'https://item.taobao.com',
-    'referer': 'https://item.taobao.com/item.htm?id=902624896473',
-    'sec-ch-ua': '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
+    'pragma': 'no-cache',
+    'priority': 'u=1, i',
+    'referer': 'https://item.taobao.com/',
+    'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
     'sec-ch-ua-mobile': '?0',
     'sec-ch-ua-platform': '"Windows"',
     'sec-fetch-dest': 'empty',
     'sec-fetch-mode': 'cors',
     'sec-fetch-site': 'same-site',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.6261.95 Safari/537.36',
-    'x-pipu2': "h%7Bdugjzqhoflgzc%7D%3B%20m6(1'180%26.ih%2C7%2F(8.zgo%7Bnjqrwijs%7B",
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+    'x-pipu2': 'h%7Bdugn%7C%7Bllfndv%60%7D%7B353%2B%2B%26%25a%3F8z5)j29%241%3A%3E!%7Bo%7Boqrwijs%7B',
+    # 'cookie': 't=25b98257d8c2ee74bc52cd379abca5d8; wk_cookie2=1c9cfc34fd54d09a72cb606990a7ba68; _samesite_flag_=true; cookie2=10943715ee9ffea21918f15057c9ae05; _tb_token_=ee35714b7fb5e; mt=ci=0_0; wk_unb=UUwY%2Fjg%2BJRxTVQ%3D%3D; lgc=%5Cu8DB3%5Cu7403%5Cu5148%5Cu751F%5Cu963F%5Cu8BFA; cancelledSubSites=empty; dnk=%5Cu8DB3%5Cu7403%5Cu5148%5Cu751F%5Cu963F%5Cu8BFA; tracknick=%5Cu8DB3%5Cu7403%5Cu5148%5Cu751F%5Cu963F%5Cu8BFA; _cc_=Vq8l%2BKCLiw%3D%3D; thw=cn; 3PcFlag=1747200903186; sgcookie=E100mqCc1MAZXP6oRdSBxvz40p5fkX7iSYFsjv4Lr1KxDdKQAHPqtj%2FPd40t16Bm4sTiR4tpnEKn%2BeA9CNJ9qnbciZL6Jwodt8qPcvkqxNEmgMrKSG9NhuWe3hIOMknKTz9H%2Bj%2FEMkd3Tn5q3%2FO1h8FzNA%3D%3D; unb=2487913053; uc1=cookie14=UoYajLe8UiEn%2Fg%3D%3D&cookie21=V32FPkk%2Fgi8IDE%2FSpbTf&cookie16=V32FPkk%2FxXMk5UvIbNtImtMfJQ%3D%3D&pas=0&cookie15=Vq8l%2BKCLz3%2F65A%3D%3D&existShop=true; uc3=vt3=F8dD2EXfIMcuP87XCOs%3D&nk2=tPyx%2BmdUJ5suFyAe&id2=UUwY%2Fjg%2BJRxTVQ%3D%3D&lg2=URm48syIIVrSKA%3D%3D; csg=edefe7ac; cookie17=UUwY%2Fjg%2BJRxTVQ%3D%3D; skt=ebe07036134e714b; existShop=MTc0NzIwMTAxMQ%3D%3D; uc4=nk4=0%40thpxwJf2ZW2jlM0XVjcHbKzhpehoJcA%3D&id4=0%40U27Hq%2BnL6JHzikHQQR4L751hziPX; _l_g_=Ug%3D%3D; sg=%E8%AF%BA37; _nk_=%5Cu8DB3%5Cu7403%5Cu5148%5Cu751F%5Cu963F%5Cu8BFA; cookie1=B0Txavq8coXp0Z4jBK9eRa%2FsUCTDd7nQ8%2BTSbdWH8O0%3D; xlly_s=1; cna=yt2gIAaI7xgCAXjmeudsm5Mr; mtop_partitioned_detect=1; _m_h5_tk=0a6374225f7f46af9519eb0544a749be_1747289054576; _m_h5_tk_enc=b14d6477b87ed343eb48b6722cce6099; bxuab=0; aui=2487913053; sca=81fd29e0; isg=BCkpBfhrZX2aKlnMaV1jJ0v1ONWD9h0oIvPCVcsfk5BPkkukE0Ve-C2SVjakCrVg; tfstk=gKnxIIqE8QADEloYEx8lSy2eTYJk-UDqejkCj5Vc5bh-ivg0oANgXfht6S46gomtwjDIorDsjRiT000cjSA4XAG3XBAHxHqVdur6tBbF8XygfRtg1U4XHw6HHBAHx3YfFldvtfvxnXi8Q7wbCRNXeTNzIRZ_GP15PJN7flab1zt7CR5_CGN6ezwaIRZ_ffMWeRV7hlZsplXYstNOX28z2LfJ5-s1f0eYlUDbNGwr2-UYOxiAfG_4HrFCf7dXVX4uPAztbOSTGxgE_JGfGB4qC4h8HlKllkM-5XercHfYUqDSK7MdQGkbD2nLcqdPzocxVuijJOsseoF4W-UPMQFI0YiUVzxBpYirixo-IOt_EXVS3mZ9AprYcSZ8UcAPc53S5m44bsO3uAg-w-EC4ginvE0VtWeGlLpR7NPgUEwzEwyHbzIueWvlrN7ar8y8tLpR7NzbU8FHEHbN7z2P.',
 }
 
+# 修复 JSON 数据
+def fix_json(data):
+    # 将数字键替换为字符串键
+    data = re.sub(r'(\d+):', r'"\1":', data)
+    # 添加外层结构
+    fixed_data = f'{{"componentsVO": {{"umpPriceLogVO": {{"map": {data}}}}}}}'
+    return fixed_data
 
 rtime = round(time.time() * 1000)
-id = "902624896473"
-data_dict = {
-    'id': id,
-    'detail_v': '3.3.2'
-}
-exParams_dict = {
-    'id': id,
-    'queryParams': f'id={id}',
-    'domain': "https://detail.tmall.hk",
-    'path_name': "/hk/item.htm"
-}
-# 将 exParams_dict 转换为 JSON 字符串
-data_dict['exParams'] = json.dumps(exParams_dict)
-# 转换 data_dict 为 JSON 字符串
-data = json.dumps(data_dict)
-print(data)
-token = cookies['_m_h5_tk'].split('_')[0]
-sign = jsDrive.call('get_sing', token, rtime,data)
+ids = ['924385060211','904491962911','922812571122']
+for id in ids:
 
-params = {
-    'jsv': '2.7.4',
-    'appKey': '12574478',
-    't': rtime,
-    'sign': sign,
-    'api': 'mtop.taobao.pcdetail.data.get',
-    'v': '1.0',
-    'isSec': '0',
-    'ecode': '0',
-    'timeout': '10000',
-    'ttid': '2022@taobao_litepc_9.17.0',
-    'AntiFlood': 'true',
-    'AntiCreep': 'true',
-    'dataType': 'json',
-    'valueType': 'string',
-    'type': 'json',
-    'data': data,
-}
+    data_dict = {
+        'id': id,
+        'detail_v': '3.3.2'
+    }
+    exParams_dict = {
+        'id': id,
+        'queryParams': f'id={id}',
+        'domain': "https://detail.tmall.hk",
+        'path_name': "/hk/item.htm"
+    }
+    # 将 exParams_dict 转换为 JSON 字符串
+    data_dict['exParams'] = json.dumps(exParams_dict)
+    # 转换 data_dict 为 JSON 字符串
+    data = json.dumps(data_dict)
 
-response = requests.get(
-    'https://h5api.m.tmall.hk/h5/mtop.taobao.pcdetail.data.get/1.0/',
-    params=params,
-    cookies=cookies,
-    headers=headers,
-)
+    token = cookies['_m_h5_tk'].split('_')[0]
+    sign = jsDrive.call('get_sing', token, rtime,data)
 
-print(response.text)
+    params = {
+        'jsv': '2.7.4',
+        'appKey': '12574478',
+        't': rtime,
+        'sign': sign,
+        'api': 'mtop.taobao.pcdetail.data.get',
+        'v': '1.0',
+        'isSec': '0',
+        'ecode': '0',
+        'timeout': '10000',
+        'ttid': '2022@taobao_litepc_9.17.0',
+        'AntiFlood': 'true',
+        'AntiCreep': 'true',
+        'dataType': 'json',
+        'valueType': 'string',
+        'type': 'json',
+        'data': data,
+    }
+
+    response = requests.get(
+        'https://h5api.m.tmall.hk/h5/mtop.taobao.pcdetail.data.get/1.0/',
+        params=params,
+        cookies=cookies,
+        headers=headers,
+    )
+    try:
+        data_json = response.json()
+
+        data = data_json['data']
+        itemId = data['item']['itemId']
+        title = data['item']['title']
+        industryParamVO = data["plusViewVO"]["industryParamVO"]
+        basicParamList = industryParamVO["basicParamList"]
+        param = {}
+        for basicParam in basicParamList:
+            propertyName = basicParam['propertyName']
+            valueName = basicParam['valueName']
+            param[propertyName] = valueName
+        if industryParamVO.get("enhanceParamList")!=None :
+            enhanceParamList = data["plusViewVO"]["industryParamVO"]["enhanceParamList"]
+            for enhanceParam in enhanceParamList:
+                propertyName = enhanceParam['propertyName']
+                valueName = enhanceParam['valueName']
+                param[propertyName] = valueName
+        sku_list = []
+        skuBase = data['skuBase']
+        props = skuBase['props']
+        for prop in props:
+            values = prop['values']
+            for value in values:
+                name = value['name']
+                vid = value['vid']
+                sku_detail = {
+                    'name': name,
+                    'vid': vid,
+                }
+                sku_list.append(sku_detail)
+
+        map = data["componentsVO"]["umpPriceLogVO"]["map"]
+        # 修复数据
+        fixed_json_str = fix_json(map)
+        fixed_json = json.loads(fixed_json_str)
+        map = fixed_json["componentsVO"]["umpPriceLogVO"]["map"]
+        skus = data["skuBase"]["skus"]
+        skuList = []
+        for sku in skus:
+            skuId = str(sku['skuId'])
+            map_data = map[skuId]
+            price1 = map_data['price1']
+            propPath = sku['propPath']
+
+            sku_data = {
+                'skuId': skuId,
+                'propPath': propPath,
+                'price': price1,
+            }
+            skuList.append(sku_data)
+
+
+        print(f"响应体：{data_json}")
+        data = {
+            "商品id":itemId,
+            "商品名称":title,
+            "商品属性":param,
+            "sku参数1": sku_list,
+            "sku参数2":skuList,
+        }
+        print(data)
+    except Exception as e:
+        print(e)
+        print(data_json)
+
+# 我个人账号，希望面试官不要频繁请求
